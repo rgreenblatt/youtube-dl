@@ -36,7 +36,7 @@ class PanoptoIE(PanoptoBaseIE):
     _TESTS = [
         {
             'url': 'https://demo.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=26b3ae9e-4a48-4dcc-96ba-0befba08a0fb',
-            'md5': 'e8e6ef6b0572dd5985f5f8c3e096f717',
+            'md5': '048dab5c2f8ab97f2bd75ab4cf3f463a',
             'info_dict': {
                 'id': '26b3ae9e-4a48-4dcc-96ba-0befba08a0fb',
                 'ext': 'mp4',
@@ -123,11 +123,11 @@ class PanoptoIE(PanoptoBaseIE):
                 'title': this_stream['Tag'],
                 'formats': [],
             }
-            if 'StreamHttpUrl' in this_stream:
+            if 'StreamHttpUrl' in this_stream and this_stream['StreamHttpUrl'] is not None:
                 new_stream['formats'].append({
                     'url': this_stream['StreamHttpUrl'],
                 })
-            if 'StreamUrl' in this_stream:
+            if 'StreamUrl' in this_stream and this_stream['StreamUrl'] is not None:
                 m3u8_formats = self._extract_m3u8_formats(this_stream['StreamUrl'], video_id, 'mp4')
                 self._sort_formats(m3u8_formats)
                 new_stream['formats'].extend(m3u8_formats)
