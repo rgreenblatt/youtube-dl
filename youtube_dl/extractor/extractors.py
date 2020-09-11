@@ -822,6 +822,10 @@ from .packtpub import (
     PacktPubCourseIE,
 )
 from .pandoratv import PandoraTVIE
+from .panopto import (
+    PanoptoIE,
+    PanoptoFolderIE,
+)
 from .parliamentliveuk import ParliamentLiveUKIE
 from .patreon import PatreonIE
 from .pbs import PBSIE
