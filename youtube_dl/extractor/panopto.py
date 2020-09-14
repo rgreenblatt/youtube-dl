@@ -128,9 +128,20 @@ class PanoptoIE(PanoptoBaseIE):
                     'url': this_stream['StreamHttpUrl'],
                 })
             if 'StreamUrl' in this_stream and this_stream['StreamUrl'] is not None:
-                m3u8_formats = self._extract_m3u8_formats(this_stream['StreamUrl'], video_id, 'mp4')
-                self._sort_formats(m3u8_formats)
-                new_stream['formats'].extend(m3u8_formats)
+                get_stream_url_matcher = lambda mid : re.compile(r'^https?://.*?/.*?/.*?' + mid + r'\?InvocationID.*')
+                if '_M3U8_MATCHER' not in self.__dict__:
+                    self._M3U8_MATCHER = get_stream_url_matcher(r'\.hls/master\.m3u8')
+                if '_MP4_MATCHER' not in self.__dict__:
+                    self._MP4_MATCHER = get_stream_url_matcher(r'\.mp4')
+                if self._M3U8_MATCHER.match(this_stream['StreamUrl']):
+                    m3u8_formats = self._extract_m3u8_formats(this_stream['StreamUrl'], video_id, 'mp4')
+                    self._sort_formats(m3u8_formats)
+                    new_stream['formats'].extend(m3u8_formats)
+                elif self._MP4_MATCHER.match(this_stream['StreamUrl']):
+                    new_stream['formats'].append({'url': this_stream['StreamUrl']})
+                else:
+                    raise ExtractorError('Unexpected StreamUrl format')
+
             if len(new_stream['formats']):
                 streams.append(new_stream)
 
